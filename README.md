@@ -13,7 +13,7 @@
     <br />
   </p>
   <br />
-  <pre>npm i -D <a href="https://www.npmjs.com/package/use-effect-debugger">use-effect-debugger</a></pre>
+  <pre>npm i -D <a href="https://www.npmjs.com/package/@dylanjhdel/use-effect-debugger">@dylanjhdel/use-effect-debugger</a></pre>
   <br />
 </div>
 
