@@ -1,5 +1,5 @@
 {
-  "name": "use-effect-debugger",
+  "name": "@dylanjddel/use-effect-debugger",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
@@ -10,8 +10,8 @@
     "pack": "npm pack",
     "link": "npm link",
     "test": "jest",
-    "test:silent": "jest --silent",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "publish": "npm run test & npm publish --access public"
   },
   "keywords": [],
   "author": "",

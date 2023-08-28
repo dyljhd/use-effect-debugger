@@ -65,7 +65,7 @@ const useEffectDebugger = (
 
   // Iterate over each of the `changedDeps` keys and log to the console
   if (Object.keys(changedDeps).length) {
-    console.log(`${consoleName}:`, changedDeps);
+    console.log(`${consoleName}`, changedDeps);
   }
 
   // Invoke the standard `useEffect` hook with the `effect` callback and `deps` passed

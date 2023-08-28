@@ -330,7 +330,7 @@ describe("useEffectDebugger", () => {
     );
 
     // Check that the default consoleName is applied
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       "0": { prev: undefined, cur: "0" },
     });
     checkConsole("useEffect ran");
@@ -344,7 +344,7 @@ describe("useEffectDebugger", () => {
     });
 
     // Check that the custom consoleName is applied
-    checkConsole("USE-EFFECT-DEBUGGER:", {
+    checkConsole("USE-EFFECT-DEBUGGER", {
       "0": { prev: "0", cur: "1" },
     });
     checkConsole("useEffect ran");
@@ -356,7 +356,7 @@ describe("useEffectDebugger", () => {
     const { user, checkConsole } = renderWithSetup(<TestDepNamesComponent />);
 
     // Check that the default depNames are applied
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       "0": { prev: undefined, cur: "0" },
       "1": { prev: undefined, cur: 0 },
     });
@@ -370,7 +370,7 @@ describe("useEffectDebugger", () => {
     });
 
     // Check that the default depNames are applied
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       "0": { prev: "0", cur: "1" },
       "1": { prev: 0, cur: 1 },
     });
@@ -384,7 +384,7 @@ describe("useEffectDebugger", () => {
     });
 
     // Check that partial custom depNames are applied
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       "0": { prev: "1", cur: "2" },
       Number: { prev: 1, cur: 2 },
     });
@@ -398,7 +398,7 @@ describe("useEffectDebugger", () => {
     });
 
     // Check that all custom depNames are applied
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       String: { prev: "2", cur: "3" },
       Number: { prev: 2, cur: 3 },
     });
@@ -412,7 +412,7 @@ describe("useEffectDebugger", () => {
     });
 
     // Check that too many custom depNames are applied and ignored (as needed)
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       String: { prev: "3", cur: "4" },
       Number: { prev: 3, cur: 4 },
     });
@@ -435,7 +435,7 @@ describe("useEffectDebugger", () => {
     );
 
     // Check the handling of the mounted initial values
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       String: { prev: undefined, cur: "0" },
       Number: { prev: undefined, cur: 0 },
       Bigint: { prev: undefined, cur: BigInt(0) },
@@ -463,7 +463,7 @@ describe("useEffectDebugger", () => {
       );
     });
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       String: { prev: "0", cur: "1" },
     });
     checkConsole("useEffect ran");
@@ -477,7 +477,7 @@ describe("useEffectDebugger", () => {
       );
     });
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       Number: { prev: 0, cur: 1 },
     });
     checkConsole("useEffect ran");
@@ -491,7 +491,7 @@ describe("useEffectDebugger", () => {
       );
     });
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       Bigint: { prev: BigInt(0), cur: BigInt(1) },
     });
     checkConsole("useEffect ran");
@@ -503,7 +503,7 @@ describe("useEffectDebugger", () => {
       await user.click(screen.getByRole("button", { name: "Toggle Boolean" }));
     });
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       Boolean: { prev: false, cur: true },
     });
     checkConsole("useEffect ran");
@@ -515,7 +515,7 @@ describe("useEffectDebugger", () => {
       await user.click(screen.getByRole("button", { name: "Update Symbol" }));
     });
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       Symbol: { prev: initialSymbol, cur: updatedSymbol },
     });
     checkConsole("useEffect ran");
@@ -567,7 +567,7 @@ describe("useEffectDebugger", () => {
 
     // NOTE: This test shows that a function does not appear when it has not been changed
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       Function: { prev: undefined, cur: initialFunction },
       MemoizedFunction: { prev: undefined, cur: initialMemoizedFunction },
     });
@@ -579,7 +579,7 @@ describe("useEffectDebugger", () => {
       );
     });
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       Function: { prev: initialFunction, cur: rerenderedFunction },
     });
     checkConsole("useEffect ran");
@@ -592,7 +592,7 @@ describe("useEffectDebugger", () => {
       );
     });
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       Function: { prev: rerenderedFunction, cur: depsChangedFunction },
       MemoizedFunction: {
         prev: initialMemoizedFunction,
@@ -614,7 +614,7 @@ describe("useEffectDebugger", () => {
       />
     );
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       Object: { prev: undefined, cur: initialObject },
       OtherDep: { prev: undefined, cur: 0 },
     });
@@ -624,7 +624,7 @@ describe("useEffectDebugger", () => {
       await user.click(screen.getByRole("button", { name: "Update Object" }));
     });
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       Object: { prev: initialObject, cur: updatedObject },
     });
     checkConsole("useEffect ran");
@@ -638,7 +638,7 @@ describe("useEffectDebugger", () => {
       await user.click(screen.getByRole("button", { name: "Update OtherDep" }));
     });
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       OtherDep: { prev: 0, cur: 1 },
     });
     checkConsole("useEffect ran");
@@ -654,7 +654,7 @@ describe("useEffectDebugger", () => {
       <TestDateComponent initialDate={initialDate} updatedDate={updatedDate} />
     );
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       Date: { prev: undefined, cur: initialDate },
       OtherDep: { prev: undefined, cur: 0 },
     });
@@ -664,7 +664,7 @@ describe("useEffectDebugger", () => {
       await user.click(screen.getByRole("button", { name: "Update Date" }));
     });
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       Date: { prev: initialDate, cur: updatedDate },
     });
     checkConsole("useEffect ran");
@@ -678,7 +678,7 @@ describe("useEffectDebugger", () => {
       await user.click(screen.getByRole("button", { name: "Update OtherDep" }));
     });
 
-    checkConsole("use-effect-debugger:", {
+    checkConsole("use-effect-debugger", {
       OtherDep: { prev: 0, cur: 1 },
     });
     checkConsole("useEffect ran");
