@@ -1,6 +1,6 @@
 {
   "name": "@dyljhd/use-effect-debugger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A type-safe React hook for debugging purposes that wraps around the useEffect hook, which returns the dependancies that changed on each iteration of the effect within the console.",
   "main": "src/index.ts",
   "files": [
@@ -13,6 +13,10 @@
     "test:watch": "jest --watch",
     "publish": "npm run test & npm publish --access public"
   },
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/dyljhd/use-effect-debugger"
+  },
   "keywords": [
     "useEffectDebugger",
     "useEffect",
@@ -24,9 +28,9 @@
     "changed"
   ],
   "author": "Dylan Delorie",
-  "license": "ISC",
-  "dependencies": {
-    "react": "^18.2.0"
+  "license": "Unlicense",
+  "peerDependencies": {
+    "react": "^16.8 || ^17 || ^18"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.3.1",

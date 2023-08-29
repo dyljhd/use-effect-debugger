@@ -11,6 +11,8 @@
     <br />
     A type-safe React hook for debugging purposes that wraps around the useEffect hook, which returns the dependancies that changed on each iteration of the effect within the console.
     <br />
+    <a href="https://github.com/dyljhd/use-effect-debugger">https://github.com/dyljhd/use-effect-debugger</a>
+    <br />
   </p>
   <br />
   <pre>npm i -D <a href="https://www.npmjs.com/package/@dyljhd/use-effect-debugger">@dyljhd/use-effect-debugger</a></pre>
@@ -22,7 +24,7 @@
 ### Do **<span style="color: #dd2322">NOT</span>** use in **production** environment! <br>
 
 This package is intended to be a debugging tool only! <br>
-Therefore, it should be installed as a `devDependancy` and removed from the codebase before pushing to a production environment.
+Therefore, it should be installed within the `devDependancies` and all usage removed from the codebase before pushing to a production environment.
 
 ## Reference
 
@@ -54,8 +56,8 @@ function ExampleComponent() {
     },
     [string, number],
     {
-      consoleName: "USE-EFFECT-DEBUGGER"
-      depNames: [null, "Number"]
+      consoleName: "USE-EFFECT-DEBUGGER",
+      depNames: [null, "Number"],
     }
   );
 
