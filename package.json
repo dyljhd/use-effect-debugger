@@ -14,8 +14,8 @@
     "publish": "npm run test & npm publish --access public"
   },
   "repository": {
-    "type": "github",
-    "url": "https://github.com/dyljhd/use-effect-debugger"
+    "type": "git",
+    "url": "git+https://github.com/dyljhd/use-effect-debugger.git"
   },
   "keywords": [
     "useEffectDebugger",
