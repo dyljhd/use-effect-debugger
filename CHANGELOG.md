@@ -1,10 +1,24 @@
+# 1.0.2 (2023-08-30)
+
+## Fixes
+
+- Created a `dist` folder with an ESM output (forgot to do this - _facepalm_)
+
+### Dev
+
+- Created/updated many repository configuration files (e.g. `Jest`, `Prettier`, `tsconfig` etc.)
+- Updated `package.json`
+
 # 1.0.1 (2023-08-29)
 
-### Features
+## Features
+
+- Small tweak to `useEffectDebugger` hook
+
+### Dev
 
 - Updated `README.md`
 - Updated `package.json`
-- Small tweak to `useEffectDebugger` hook
 
 # 1.0.0 (2023-08-28)
 

@@ -1,1 +1,1 @@
-export { default as useEffectDebugger } from "./useEffectDebugger";
+export { default as useEffectDebugger } from './useEffectDebugger';

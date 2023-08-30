@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect } from 'react';
 
 type UseEffectDebuggerDebugOptions = {
   consoleName?: string;
@@ -36,7 +36,7 @@ const useEffectDebugger = (
 ) => {
   const prevDeps = usePreviousDeps(deps, []);
 
-  const consoleName = debugOptions?.consoleName ?? "use-effect-debugger";
+  const consoleName = debugOptions?.consoleName ?? 'use-effect-debugger';
   const depNames = debugOptions?.depNames ?? [];
 
   // Go through each of the deps to check and collate all of the deps that have changed

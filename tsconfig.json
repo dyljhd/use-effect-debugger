@@ -1,6 +1,13 @@
 {
-  "extends": "@tsconfig/recommended/tsconfig.json",
   "compilerOptions": {
-    "jsx": "react"
-  }
+    "strict": true,
+    "alwaysStrict": true,
+    "module": "NodeNext",
+    "target": "ES6",
+    "moduleResolution": "NodeNext",
+    "lib": ["ESNext", "DOM"],
+    "jsx": "react",
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules", "dist"]
 }

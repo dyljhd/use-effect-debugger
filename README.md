@@ -47,17 +47,17 @@ Therefore, it should be installed within the `devDependancies` and all usage rem
 
 ```tsx
 function ExampleComponent() {
-  const [string, setString] = useState("0");
+  const [string, setString] = useState('0');
   const [number, setNumber] = useState(0);
 
   useEffectDebugger(
     () => {
-      console.log("useEffect ran");
+      console.log('useEffect ran');
     },
     [string, number],
     {
-      consoleName: "USE-EFFECT-DEBUGGER",
-      depNames: [null, "Number"],
+      consoleName: 'USE-EFFECT-DEBUGGER',
+      depNames: [null, 'Number'],
     }
   );
 
