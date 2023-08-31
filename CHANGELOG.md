@@ -1,4 +1,4 @@
-## 1.1.0 (2023-08-31)
+## 1.1.1 (2023-08-31)
 
 ### Features
 
@@ -10,6 +10,12 @@
 - Added a new `Jest` test for the new `consoleOutput` debug option
 - Updated `package.json`
 - Updated `README.md`
+
+## 1.1.0 (2023-08-31)
+
+### Dev
+
+- Had to skip this version as a result of needing to unpublish this version of the package from NPM
 
 ## 1.0.2 (2023-08-30)
 
