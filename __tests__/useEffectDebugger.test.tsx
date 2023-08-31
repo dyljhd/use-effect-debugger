@@ -7,19 +7,36 @@ import '@testing-library/jest-dom';
 import useEffectDebugger from '../src/useEffectDebugger';
 
 function renderWithSetup(jsx: React.ReactElement) {
-  const consoleSpy = jest.spyOn(console, 'log');
+  const consoleLogSpy = jest.spyOn(console, 'log');
+  const consoleTableSpy = jest.spyOn(console, 'table');
 
-  let nthCall = 1;
+  let consoleLogSpyNthCall = 1;
+  let consoleTableSpyNthCall = 1;
 
   return {
     user: userEvent.setup(),
-    checkConsole: (...args: unknown[]) => {
-      expect(consoleSpy).toHaveBeenNthCalledWith(nthCall, ...args);
-      nthCall++;
+    checkConsoleLog: (...args: unknown[]) => {
+      expect(consoleLogSpy).toHaveBeenNthCalledWith(
+        consoleLogSpyNthCall,
+        ...args
+      );
+      consoleLogSpyNthCall++;
     },
-    checkNoConsole: (nthCallsInLatestEvent: number) => {
-      expect(consoleSpy).not.toHaveBeenCalledTimes(
-        nthCallsInLatestEvent + (nthCall - 1)
+    checkNoConsoleLog: (nthCallsInLatestEvent: number) => {
+      expect(consoleLogSpy).not.toHaveBeenCalledTimes(
+        nthCallsInLatestEvent + (consoleLogSpyNthCall - 1)
+      );
+    },
+    checkConsoleTable: (...args: unknown[]) => {
+      expect(consoleTableSpy).toHaveBeenNthCalledWith(
+        consoleTableSpyNthCall,
+        ...args
+      );
+      consoleTableSpyNthCall++;
+    },
+    checkNoConsoleTable: (nthCallsInLatestEvent: number) => {
+      expect(consoleTableSpy).not.toHaveBeenCalledTimes(
+        nthCallsInLatestEvent + (consoleTableSpyNthCall - 1)
       );
     },
     ...render(jsx),
@@ -79,6 +96,52 @@ function TestDepNamesComponent() {
         ? ['String', 'Number']
         : applyTooManyDepNames
         ? ['String', 'Number', 'ExtraDepName']
+        : undefined,
+    }
+  );
+
+  function incrementString() {
+    setString((prev) => String(Number(prev) + 1));
+  }
+
+  function incrementNumber() {
+    setNumber((prev) => prev + 1);
+  }
+
+  function incrementAll() {
+    incrementString();
+    incrementNumber();
+  }
+
+  return (
+    <>
+      <p>String: {string}</p>
+      <p>Number: {number}</p>
+      <button onClick={incrementAll}>Increment All</button>
+    </>
+  );
+}
+
+function TestConsoleOutputComponent() {
+  const [string, setString] = useState('0');
+  const [number, setNumber] = useState(0);
+
+  const applyUndefinedConsoleOutput = string === '0';
+  const applyLogConsoleOutput = string === '1';
+  const applyTableConsoleOutput = string === '2';
+
+  useEffectDebugger(
+    () => {
+      console.log('useEffect ran');
+    },
+    [string, number],
+    {
+      consoleOutput: applyUndefinedConsoleOutput
+        ? undefined
+        : applyLogConsoleOutput
+        ? 'log'
+        : applyTableConsoleOutput
+        ? 'table'
         : undefined,
     }
   );
@@ -325,15 +388,15 @@ describe('useEffectDebugger', () => {
   beforeEach(() => jest.resetAllMocks());
 
   test('sets the consoleName debug option as expected', async () => {
-    const { user, checkConsole } = renderWithSetup(
+    const { user, checkConsoleLog } = renderWithSetup(
       <TestConsoleNameComponent />
     );
 
     // Check that the default consoleName is applied
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       '0': { prev: undefined, cur: '0' },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('String: 0'));
 
@@ -344,23 +407,25 @@ describe('useEffectDebugger', () => {
     });
 
     // Check that the custom consoleName is applied
-    checkConsole('USE-EFFECT-DEBUGGER', {
+    checkConsoleLog('USE-EFFECT-DEBUGGER', {
       '0': { prev: '0', cur: '1' },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('String: 1'));
   });
 
   test('sets the depNames debug option as expected', async () => {
-    const { user, checkConsole } = renderWithSetup(<TestDepNamesComponent />);
+    const { user, checkConsoleLog } = renderWithSetup(
+      <TestDepNamesComponent />
+    );
 
     // Check that the default depNames are applied
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       '0': { prev: undefined, cur: '0' },
       '1': { prev: undefined, cur: 0 },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('String: 0'));
     expect(screen.getByText('Number: 0'));
@@ -370,11 +435,11 @@ describe('useEffectDebugger', () => {
     });
 
     // Check that the default depNames are applied
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       '0': { prev: '0', cur: '1' },
       '1': { prev: 0, cur: 1 },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('String: 1'));
     expect(screen.getByText('Number: 1'));
@@ -384,11 +449,11 @@ describe('useEffectDebugger', () => {
     });
 
     // Check that partial custom depNames are applied
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       '0': { prev: '1', cur: '2' },
       Number: { prev: 1, cur: 2 },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('String: 2'));
     expect(screen.getByText('Number: 2'));
@@ -398,11 +463,11 @@ describe('useEffectDebugger', () => {
     });
 
     // Check that all custom depNames are applied
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       String: { prev: '2', cur: '3' },
       Number: { prev: 2, cur: 3 },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('String: 3'));
     expect(screen.getByText('Number: 3'));
@@ -412,14 +477,59 @@ describe('useEffectDebugger', () => {
     });
 
     // Check that too many custom depNames are applied and ignored (as needed)
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       String: { prev: '3', cur: '4' },
       Number: { prev: 3, cur: 4 },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('String: 4'));
     expect(screen.getByText('Number: 4'));
+  });
+
+  test('sets the consoleOutput debug option as expected', async () => {
+    const { user, checkConsoleLog, checkConsoleTable } = renderWithSetup(
+      <TestConsoleOutputComponent />
+    );
+
+    // Check that the default consoleOutput is applied
+    checkConsoleLog('use-effect-debugger', {
+      '0': { prev: undefined, cur: '0' },
+      '1': { prev: undefined, cur: 0 },
+    });
+    checkConsoleLog('useEffect ran');
+
+    expect(screen.getByText('String: 0'));
+    expect(screen.getByText('Number: 0'));
+
+    await act(async () => {
+      await user.click(screen.getByRole('button', { name: 'Increment All' }));
+    });
+
+    // Check that the consoleOutput of `log` is applied and gives the expected result
+    checkConsoleLog('use-effect-debugger', {
+      '0': { prev: '0', cur: '1' },
+      '1': { prev: 0, cur: 1 },
+    });
+    checkConsoleLog('useEffect ran');
+
+    expect(screen.getByText('String: 1'));
+    expect(screen.getByText('Number: 1'));
+
+    await act(async () => {
+      await user.click(screen.getByRole('button', { name: 'Increment All' }));
+    });
+
+    // Check that the consoleOutput of `table` is applied and gives the expected result
+    checkConsoleLog('use-effect-debugger');
+    checkConsoleTable({
+      '0': { prev: '1', cur: '2' },
+      '1': { prev: 1, cur: 2 },
+    });
+    checkConsoleLog('useEffect ran');
+
+    expect(screen.getByText('String: 2'));
+    expect(screen.getByText('Number: 2'));
   });
 
   // Primitives: string, number, bigint, boolean, symbol, null and undefined
@@ -427,7 +537,7 @@ describe('useEffectDebugger', () => {
     const initialSymbol = Symbol(0);
     const updatedSymbol = Symbol(1);
 
-    const { user, checkConsole, checkNoConsole } = renderWithSetup(
+    const { user, checkConsoleLog, checkNoConsoleLog } = renderWithSetup(
       <TestPrimitivesComponent
         initialSymbol={initialSymbol}
         updatedSymbol={updatedSymbol}
@@ -435,7 +545,7 @@ describe('useEffectDebugger', () => {
     );
 
     // Check the handling of the mounted initial values
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       String: { prev: undefined, cur: '0' },
       Number: { prev: undefined, cur: 0 },
       Bigint: { prev: undefined, cur: BigInt(0) },
@@ -444,7 +554,7 @@ describe('useEffectDebugger', () => {
       NullVal: { prev: undefined, cur: null },
       // `UndefinedVal` should not appear as a result of initial value being `undefined`
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('String: 0'));
     expect(screen.getByText('Number: 0'));
@@ -463,10 +573,10 @@ describe('useEffectDebugger', () => {
       );
     });
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       String: { prev: '0', cur: '1' },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('String: 1'));
 
@@ -477,10 +587,10 @@ describe('useEffectDebugger', () => {
       );
     });
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       Number: { prev: 0, cur: 1 },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('Number: 1'));
 
@@ -491,10 +601,10 @@ describe('useEffectDebugger', () => {
       );
     });
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       Bigint: { prev: BigInt(0), cur: BigInt(1) },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText(`Bigint: ${BigInt(1)}`));
 
@@ -503,10 +613,10 @@ describe('useEffectDebugger', () => {
       await user.click(screen.getByRole('button', { name: 'Toggle Boolean' }));
     });
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       Boolean: { prev: false, cur: true },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('Boolean: true'));
 
@@ -515,10 +625,10 @@ describe('useEffectDebugger', () => {
       await user.click(screen.getByRole('button', { name: 'Update Symbol' }));
     });
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       Symbol: { prev: initialSymbol, cur: updatedSymbol },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText(`Symbol: ${String(updatedSymbol)}`));
 
@@ -527,7 +637,7 @@ describe('useEffectDebugger', () => {
       await user.click(screen.getByRole('button', { name: 'Update NullVal' }));
     });
 
-    checkNoConsole(2);
+    checkNoConsoleLog(2);
 
     expect(screen.getByText('NullVal: null'));
 
@@ -538,7 +648,7 @@ describe('useEffectDebugger', () => {
       );
     });
 
-    checkNoConsole(2);
+    checkNoConsoleLog(2);
 
     expect(screen.getByText('UndefinedVal: undefined'));
   });
@@ -555,7 +665,7 @@ describe('useEffectDebugger', () => {
     const depsChangedMemoizedFunction = () =>
       console.log('depsChangedMemoizedFunction ran');
 
-    const { user, checkConsole } = renderWithSetup(
+    const { user, checkConsoleLog } = renderWithSetup(
       <TestFunctionComponent
         initialFunction={initialFunction}
         rerenderedFunction={rerenderedFunction}
@@ -567,11 +677,11 @@ describe('useEffectDebugger', () => {
 
     // NOTE: This test shows that a function does not appear when it has not been changed
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       Function: { prev: undefined, cur: initialFunction },
       MemoizedFunction: { prev: undefined, cur: initialMemoizedFunction },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     await act(async () => {
       await user.click(
@@ -579,10 +689,10 @@ describe('useEffectDebugger', () => {
       );
     });
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       Function: { prev: initialFunction, cur: rerenderedFunction },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     await act(async () => {
       await user.click(
@@ -592,14 +702,14 @@ describe('useEffectDebugger', () => {
       );
     });
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       Function: { prev: rerenderedFunction, cur: depsChangedFunction },
       MemoizedFunction: {
         prev: initialMemoizedFunction,
         cur: depsChangedMemoizedFunction,
       },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
   });
 
   test('handles an object as expected', async () => {
@@ -607,27 +717,27 @@ describe('useEffectDebugger', () => {
     const initialObject = { test: 'test' };
     const updatedObject = { test: 'test' };
 
-    const { user, checkConsole } = renderWithSetup(
+    const { user, checkConsoleLog } = renderWithSetup(
       <TestObjectComponent
         initialObject={initialObject}
         updatedObject={updatedObject}
       />
     );
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       Object: { prev: undefined, cur: initialObject },
       OtherDep: { prev: undefined, cur: 0 },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     await act(async () => {
       await user.click(screen.getByRole('button', { name: 'Update Object' }));
     });
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       Object: { prev: initialObject, cur: updatedObject },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText(`Object: ${updatedObject}`));
     expect(screen.getByText('OtherDep: 0'));
@@ -638,10 +748,10 @@ describe('useEffectDebugger', () => {
       await user.click(screen.getByRole('button', { name: 'Update OtherDep' }));
     });
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       OtherDep: { prev: 0, cur: 1 },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('OtherDep: 1'));
   });
@@ -650,24 +760,24 @@ describe('useEffectDebugger', () => {
     const initialDate = new Date('2001-02-02T12:00:00');
     const updatedDate = new Date('2001-02-02T13:00:00');
 
-    const { user, checkConsole } = renderWithSetup(
+    const { user, checkConsoleLog } = renderWithSetup(
       <TestDateComponent initialDate={initialDate} updatedDate={updatedDate} />
     );
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       Date: { prev: undefined, cur: initialDate },
       OtherDep: { prev: undefined, cur: 0 },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     await act(async () => {
       await user.click(screen.getByRole('button', { name: 'Update Date' }));
     });
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       Date: { prev: initialDate, cur: updatedDate },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText(`Date: ${updatedDate}`));
     expect(screen.getByText('OtherDep: 0'));
@@ -678,10 +788,10 @@ describe('useEffectDebugger', () => {
       await user.click(screen.getByRole('button', { name: 'Update OtherDep' }));
     });
 
-    checkConsole('use-effect-debugger', {
+    checkConsoleLog('use-effect-debugger', {
       OtherDep: { prev: 0, cur: 1 },
     });
-    checkConsole('useEffect ran');
+    checkConsoleLog('useEffect ran');
 
     expect(screen.getByText('OtherDep: 1'));
   });

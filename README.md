@@ -1,6 +1,6 @@
 <div align="center">
   <h1>
-    <br/>
+    <br />
     🤖
     <br />
     <code>use-effect-debugger</code>
@@ -10,8 +10,6 @@
   <p>
     <br />
     A type-safe React hook for debugging purposes that wraps around the useEffect hook, which returns the dependancies that changed on each iteration of the effect within the console.
-    <br />
-    <a href="https://github.com/dyljhd/use-effect-debugger">https://github.com/dyljhd/use-effect-debugger</a>
     <br />
   </p>
   <br />
@@ -28,18 +26,31 @@ Therefore, it should be installed within the `devDependancies` and all usage rem
 
 ## Reference
 
+### Paramater Explanation
+
 - `effect`: Accepts a function that contains imperative, possibly effectful code.
 - `deps`: The effect will only activate if the values in the list change.
 - `debugOptions`: A selection of options to customize debug output within the console.
+  - `consoleOutput`: This changes the `console` output method for the changed deps in the console.
   - `consoleName`: This changes the debug label outputted with the changed deps in the console.
   - `depNames`: This gives each of the changed deps in the object a named key instead of defaulting to its index in the `deps` array.
 
-## Notes
+### Parameter Types
+
+- `effect`: `React.EffectCallback`
+- `deps`: `React.DependencyList`
+- `debugOptions`
+  - `consoleOutput`: `"log" | "table" | undefined`
+  - `consoleName`: `string | undefined`
+  - `depNames`: `(string | null)[] | undefined`
+
+## Extra Details
 
 - `effect` and `deps` are no different from `useEffect` arguments.
 - `consoleName` defaults to `use-effect-debugger`.
 - You can pass `null` within the `depNames` array if you would like to skip naming a particular key.
 - On mount, a dep's `prev` value will always be `undefined`.
+- A `consoleOutput` of `log` outputs using `console.log`, and `table` outputs using `console.table`
 
 ## Example Usage
 

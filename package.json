@@ -1,6 +1,6 @@
 {
   "name": "@dyljhd/use-effect-debugger",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A type-safe React hook for debugging purposes that wraps around the useEffect hook, which returns the dependancies that changed on each iteration of the effect within the console.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,6 +11,7 @@
     "pack": "npm pack",
     "link": "npm link",
     "test": "jest",
+    "test:silent": "jest --silent --verbose",
     "test:watch": "jest --watch",
     "tsc": "tsc --p ./tsconfig.build.json",
     "build:cleanup": "rimraf ./dist",
