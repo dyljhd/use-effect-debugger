@@ -1,3 +1,9 @@
+## 1.2.1 (2023-08-30)
+
+### Fixes
+
+- Fixed typo in `README.md`
+
 ## 1.2.0 (2023-08-31)
 
 ### Features

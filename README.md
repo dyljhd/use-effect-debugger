@@ -26,7 +26,7 @@ Therefore, it should be installed within the `devDependancies` and all usage rem
 
 ## Reference
 
-### Paramater Explanation
+### Parameter Explanation
 
 - `effect`: Accepts a function that contains imperative, possibly effectful code.
 - `deps`: The effect will only activate if the values in the list change.
